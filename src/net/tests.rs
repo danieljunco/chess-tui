@@ -1,4 +1,4 @@
-use std::io::{Read, Write};
+use std::io::Write;
 use std::net::TcpStream;
 use std::thread;
 use std::time::{Duration, Instant};
@@ -24,7 +24,7 @@ fn until<T>(mut poll: impl FnMut() -> Option<T>) -> T {
         if let Some(value) = poll() {
             return value;
         }
-        if start.elapsed() > Duration::from_secs(4) {
+        if start.elapsed() > Duration::from_secs(8) {
             panic!("timed out");
         }
         thread::sleep(Duration::from_millis(10));
@@ -79,25 +79,31 @@ fn wait_failed(provider: &mut dyn GameProvider) -> String {
     })
 }
 
-fn write_frame(sock: &mut TcpStream, frame: &Frame) {
-    let mut line = to_line(frame);
-    line.push('\n');
-    sock.write_all(line.as_bytes()).unwrap();
+struct Client {
+    sock: TcpStream,
+    noise: snow::TransportState,
 }
 
-fn read_frame(sock: &mut TcpStream) -> Frame {
-    sock.set_read_timeout(Some(Duration::from_secs(2))).unwrap();
-    let mut buf = Vec::new();
-    let mut byte = [0u8; 1];
-    loop {
-        sock.read_exact(&mut byte).unwrap();
-        if byte[0] == b'\n' {
-            break;
-        }
-        buf.push(byte[0]);
-        assert!(buf.len() < 70_000, "frame ran away");
+impl Client {
+    fn connect(addr: &str) -> Self {
+        let mut sock = TcpStream::connect(addr).unwrap();
+        sock.set_read_timeout(Some(Duration::from_secs(2))).unwrap();
+        sock.set_write_timeout(Some(Duration::from_secs(2)))
+            .unwrap();
+        let noise = super::noise::initiate_blocking(&mut sock, None).unwrap();
+        Self { sock, noise }
     }
-    from_line(std::str::from_utf8(&buf).unwrap()).unwrap()
+
+    fn write(&mut self, frame: &Frame) {
+        let line = to_line(frame);
+        super::noise::send_plain_blocking(&mut self.sock, &mut self.noise, line.as_bytes())
+            .unwrap();
+    }
+
+    fn read(&mut self) -> Frame {
+        let bytes = super::noise::recv_plain_blocking(&mut self.sock, &mut self.noise).unwrap();
+        from_line(std::str::from_utf8(&bytes).unwrap()).unwrap()
+    }
 }
 
 #[test]
@@ -112,6 +118,28 @@ fn unknown_frame_fields_are_rejected() {
 }
 
 #[test]
+fn initial_connection_refused_reports_failure() {
+    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+    let addr = listener.local_addr().unwrap().to_string();
+    drop(listener);
+    let mut peer = PeerProvider::start(addr, "ABCD-EFGH".into(), "Ben".into(), None);
+    assert!(wait_failed(&mut peer).contains("Connection refused"));
+}
+
+#[test]
+fn silent_host_handshake_reports_failure_instead_of_retrying_forever() {
+    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+    let addr = listener.local_addr().unwrap().to_string();
+    listener.set_nonblocking(true).unwrap();
+    let mut peer = PeerProvider::start(addr, "ABCD-EFGH".into(), "Ben".into(), None);
+    // Keep the TCP connection open without sending a welcome or refusal.
+    let (_socket, _) = until(|| listener.accept().ok());
+    let reason = wait_failed(&mut peer);
+    assert!(reason.contains("handshake failed"));
+    assert!(!reason.contains("ABCD-EFGH"));
+}
+
+#[test]
 fn two_peers_sync_moves_and_reject_illegal_ones() {
     let mut host = HostProvider::start(cfg(Color::White, Duration::ZERO));
     let waiting = wait_waiting(&mut host);
@@ -119,6 +147,7 @@ fn two_peers_sync_moves_and_reject_illegal_ones() {
         format!("127.0.0.1:{}", waiting.port),
         waiting.invite,
         "Ben".into(),
+        None,
     );
     let host_board = wait_view(&mut host, |v| v.version == 1);
     let peer_board = wait_view(&mut peer, |v| v.version == 1);
@@ -186,6 +215,7 @@ fn bad_invite_is_delayed_and_does_not_take_the_seat() {
         format!("127.0.0.1:{}", waiting.port),
         "ZZZZ-ZZZZ".into(),
         "Nope".into(),
+        None,
     );
     let reason = wait_failed(&mut intruder);
     assert!(
@@ -199,6 +229,7 @@ fn bad_invite_is_delayed_and_does_not_take_the_seat() {
         format!("127.0.0.1:{}", waiting.port),
         waiting.invite,
         "Ben".into(),
+        None,
     );
     let view = wait_view(&mut host, |v| v.version == 1);
     let joined = wait_view(&mut peer, |v| v.version == 1);
@@ -211,16 +242,13 @@ fn resume_needs_the_token_and_picks_up_moves() {
     let mut host = HostProvider::start(cfg(Color::White, Duration::ZERO));
     let waiting = wait_waiting(&mut host);
     let addr = format!("127.0.0.1:{}", waiting.port);
-    let mut sock = TcpStream::connect(&addr).unwrap();
-    write_frame(
-        &mut sock,
-        &Frame::Hello {
-            protocol_version: 1,
-            invite_code: waiting.invite.clone(),
-            name: Some("Ben".into()),
-        },
-    );
-    let token = match read_frame(&mut sock) {
+    let mut client = Client::connect(&addr);
+    client.write(&Frame::Hello {
+        protocol_version: 1,
+        invite_code: waiting.invite.clone(),
+        name: Some("Ben".into()),
+    });
+    let token = match client.read() {
         Frame::Welcome {
             seat: WireColor::Black,
             seat_token: Some(token),
@@ -228,22 +256,16 @@ fn resume_needs_the_token_and_picks_up_moves() {
         } => token,
         other => panic!("welcome: {other:?}"),
     };
-    assert!(matches!(
-        read_frame(&mut sock),
-        Frame::Snapshot { version: 1, .. }
-    ));
-    drop(sock);
+    assert!(matches!(client.read(), Frame::Snapshot { version: 1, .. }));
+    drop(client);
 
-    let mut again = TcpStream::connect(&addr).unwrap();
-    write_frame(
-        &mut again,
-        &Frame::Hello {
-            protocol_version: 1,
-            invite_code: waiting.invite,
-            name: None,
-        },
-    );
-    match read_frame(&mut again) {
+    let mut again = Client::connect(&addr);
+    again.write(&Frame::Hello {
+        protocol_version: 1,
+        invite_code: waiting.invite,
+        name: None,
+    });
+    match again.read() {
         Frame::Refused {
             code: RefuseCode::SeatTaken,
             ..
@@ -259,15 +281,12 @@ fn resume_needs_the_token_and_picks_up_moves() {
     });
     let _ = wait_view(&mut host, |v| v.version == 2);
 
-    let mut back = TcpStream::connect(&addr).unwrap();
-    write_frame(
-        &mut back,
-        &Frame::Resume {
-            protocol_version: 1,
-            seat_token: token.clone(),
-        },
-    );
-    match read_frame(&mut back) {
+    let mut back = Client::connect(&addr);
+    back.write(&Frame::Resume {
+        protocol_version: 1,
+        seat_token: token.clone(),
+    });
+    match back.read() {
         Frame::Welcome {
             seat_token: None,
             seat: WireColor::Black,
@@ -275,7 +294,7 @@ fn resume_needs_the_token_and_picks_up_moves() {
         } => {}
         other => panic!("resume welcome: {other:?}"),
     }
-    match read_frame(&mut back) {
+    match back.read() {
         Frame::Snapshot {
             version: 2, moves, ..
         } => assert_eq!(moves, ["e2e4".to_string()]),
@@ -290,32 +309,29 @@ fn resume_needs_the_token_and_picks_up_moves() {
 fn duplicate_request_is_not_applied_twice() {
     let mut host = HostProvider::start(cfg(Color::Black, Duration::ZERO));
     let waiting = wait_waiting(&mut host);
-    let mut sock = TcpStream::connect(format!("127.0.0.1:{}", waiting.port)).unwrap();
-    write_frame(
-        &mut sock,
-        &Frame::Hello {
-            protocol_version: 1,
-            invite_code: waiting.invite,
-            name: Some("Ben".into()),
-        },
-    );
-    let _ = read_frame(&mut sock);
-    let _ = read_frame(&mut sock);
+    let mut client = Client::connect(&format!("127.0.0.1:{}", waiting.port));
+    client.write(&Frame::Hello {
+        protocol_version: 1,
+        invite_code: waiting.invite,
+        name: Some("Ben".into()),
+    });
+    let _ = client.read();
+    let _ = client.read();
     let move_frame = Frame::Move {
         request_id: 7,
         expected_version: 1,
         uci: "e2e4".into(),
     };
-    write_frame(&mut sock, &move_frame);
-    write_frame(&mut sock, &move_frame);
-    match read_frame(&mut sock) {
+    client.write(&move_frame);
+    client.write(&move_frame);
+    match client.read() {
         Frame::Accepted {
             request_id: 7,
             version: 2,
         } => {}
         other => panic!("first accept: {other:?}"),
     }
-    match read_frame(&mut sock) {
+    match client.read() {
         Frame::Snapshot {
             version: 2,
             ref moves,
@@ -323,14 +339,14 @@ fn duplicate_request_is_not_applied_twice() {
         } => assert_eq!(moves, &["e2e4".to_string()]),
         other => panic!("snapshot: {other:?}"),
     }
-    match read_frame(&mut sock) {
+    match client.read() {
         Frame::Accepted {
             request_id: 7,
             version: 2,
         } => {}
         other => panic!("duplicate accept: {other:?}"),
     }
-    match read_frame(&mut sock) {
+    match client.read() {
         Frame::Snapshot {
             version: 2,
             ref moves,
@@ -348,6 +364,7 @@ fn host_quit_reaches_the_peer() {
         format!("127.0.0.1:{}", waiting.port),
         waiting.invite,
         "Ben".into(),
+        None,
     );
     let _ = wait_view(&mut peer, |v| v.version == 1);
     drop(host);
@@ -366,7 +383,7 @@ fn oversized_frame_does_not_kill_the_table() {
     let _ = sock.write_all(&vec![b'A'; 70_000]);
     drop(sock);
 
-    let mut peer = PeerProvider::start(addr, waiting.invite, "Ben".into());
+    let mut peer = PeerProvider::start(addr, waiting.invite, "Ben".into(), None);
     let view = wait_view(&mut host, |v| v.version == 1);
     let _ = wait_view(&mut peer, |v| v.version == 1);
     assert_eq!(view.black, "Ben");

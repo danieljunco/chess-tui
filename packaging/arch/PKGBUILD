@@ -24,4 +24,5 @@ package() {
   cd "chess-tui-$pkgver"
   install -Dm755 target/release/vesper "$pkgdir/usr/bin/vesper"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
 }

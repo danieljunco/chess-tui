@@ -43,7 +43,7 @@ Two fields — `Host address` (`192.168.1.20:4747`, port optional) and `Invite c
 │              Ask your friend to run                                  │
 │              vesper join 192.168.1.20:4747 K7QF-M2XA                 │
 │                                                                      │
-│              Same network, VPN or SSH tunnel · traffic unencrypted  │
+│              Same network, forwarded port, or VPN · encrypted       │
 │                       ◌ Waiting for Black…                          │
 │──────────────────────────────────────────────────────────────────────│
 │ [Esc] Stop hosting    [?] Help                                       │

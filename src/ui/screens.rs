@@ -200,8 +200,13 @@ pub fn waiting(frame: &mut Frame, area: Rect, info: &WaitingInfo, spin: &str, th
     lines.push(Line::styled("INVITE CODE · single use", theme.faint()));
     lines.push(Line::raw(""));
     lines.push(Line::styled("Ask your friend to run", theme.muted()));
+    let key = if info.fingerprint.is_empty() {
+        String::new()
+    } else {
+        format!(" {}", info.fingerprint)
+    };
     lines.push(Line::styled(
-        format!("vesper join {addr} {}", info.invite),
+        format!("vesper join {addr} {}{key}", info.invite),
         theme.accent(),
     ));
     if info.addresses.len() > 1 {
@@ -224,11 +229,25 @@ pub fn waiting(frame: &mut Frame, area: Rect, info: &WaitingInfo, spin: &str, th
     ]));
     lines.push(Line::raw(""));
     lines.push(Line::styled(
-        "Works on the same network, a VPN or an SSH tunnel.",
+        "127.0.0.1 is this computer only. The address above is your network.",
         theme.faint(),
     ));
+    if let Some(public) = &info.public_ip {
+        lines.push(Line::styled(
+            format!(
+                "Outside: forward TCP {} to this machine, then join {public}",
+                info.port
+            ),
+            theme.faint(),
+        ));
+    } else {
+        lines.push(Line::styled(
+            "Outside your network: forward this TCP port, or join with a VPN address.",
+            theme.faint(),
+        ));
+    }
     lines.push(Line::styled(
-        "Traffic is not encrypted · play with people you trust.",
+        "The connection is encrypted. The host key pins who you joined.",
         theme.faint(),
     ));
     frame.render_widget(

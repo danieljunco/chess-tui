@@ -18,9 +18,9 @@ Raw TCP, one JSON object per line (`\n`-terminated UTF-8), `protocol_version` in
 
 Default port **4747**, configurable with `--port`. The host binds `0.0.0.0` (LAN reachable) unless `--bind` is given, and displays its detected LAN address(es).
 
-## Security posture (explicit)
-- **No transport encryption in the MVP.** Traffic (including the invite code and seat token) is plaintext. Intended for trusted LANs, VPN overlays or SSH tunnels (`ssh -L 4747:localhost:4747 host`). README and the waiting screen say so.
-- Confidentiality/authentication upgrade path: Noise `XX` handshake (`snow`) keyed by a short fingerprint in the invite, or QUIC. Tracked as post-MVP.
+## Security posture
+- **Transport encryption is a Noise_XX handshake** (`snow`, `Noise_XX_25519_ChaChaPoly_SHA256`) on the TCP connection before any JSON frame. The host keeps a static key for the process and shows its fingerprint on the waiting screen. A guest who passes that fingerprint refuses a different host. The seat token and the moves travel inside the encrypted session.
+- This does not cross NAT. A friend outside the LAN still needs a forwarded TCP port or a VPN address. A relay is not part of this decision.
 - Untrusted input: every frame size-bounded, strictly parsed (`deny_unknown_fields`), handshake must complete within 5 s, failed invite attempts are delayed ≥1 s and only one handshake is processed at a time.
 
 ## Consequences

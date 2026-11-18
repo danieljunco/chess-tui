@@ -16,7 +16,7 @@ Testing pyramid, async integration tests, release binaries, terminal restoration
 - Complete manual two-terminal full-game and reconnect scenarios.
 - Run checks: fmt, clippy, tests, release build; fix critical failures.
 - Write install / host / join / local / keymap docs with actual commands.
-- Describe reachability (LAN, VPN, SSH tunnel, port forwarding — no NAT traversal), plaintext-transport limitation, host-quit ends game, anonymity and credential handling.
+- Describe reachability (LAN, VPN, SSH tunnel, port forwarding — no NAT traversal), Noise_XX encryption and the host-key fingerprint, host-quit ends game, anonymity and credential handling.
 - Provide sample config and development workflow without embedding secrets.
 - Complete final screenshot/terminal-size review; ensure `docs/quality/02-progress-log.md` matches reality.
 

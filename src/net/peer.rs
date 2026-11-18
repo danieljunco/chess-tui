@@ -2,9 +2,9 @@
 //! rebuilds the board from the host's snapshots.
 
 use std::collections::HashMap;
+use std::io;
 use std::time::{Duration, Instant};
 
-use futures_util::StreamExt;
 use tokio::net::TcpStream;
 use tokio::sync::mpsc::{Receiver, Sender, UnboundedReceiver, UnboundedSender};
 use tokio::time::{MissedTickBehavior, interval, sleep, timeout};
@@ -24,6 +24,7 @@ struct Peer {
     addr: String,
     code: String,
     name: String,
+    fingerprint: Option<String>,
     ev: UnboundedSender<ProviderEvent>,
     conn: Option<Conn>,
     token: Option<String>,
@@ -48,7 +49,7 @@ pub struct PeerProvider {
 }
 
 impl PeerProvider {
-    pub fn start(addr: String, code: String, name: String) -> Self {
+    pub fn start(addr: String, code: String, name: String, fingerprint: Option<String>) -> Self {
         let runtime = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(2)
             .enable_all()
@@ -56,7 +57,7 @@ impl PeerProvider {
             .expect("tokio runtime");
         let (cmd_tx, cmd_rx) = tokio::sync::mpsc::channel(32);
         let (ev_tx, ev_rx) = tokio::sync::mpsc::unbounded_channel();
-        let task = runtime.spawn(run(addr, code, name, cmd_rx, ev_tx));
+        let task = runtime.spawn(run(addr, code, name, fingerprint, cmd_rx, ev_tx));
         Self {
             cmd_tx,
             ev_rx,
@@ -95,6 +96,7 @@ async fn run(
     addr: String,
     code: String,
     name: String,
+    fingerprint: Option<String>,
     mut cmd_rx: Receiver<GameCommand>,
     ev: UnboundedSender<ProviderEvent>,
 ) {
@@ -102,6 +104,7 @@ async fn run(
         addr: addr.clone(),
         code,
         name,
+        fingerprint,
         ev,
         conn: None,
         token: None,
@@ -125,6 +128,10 @@ async fn run(
             match peer.dial().await {
                 Some(()) => {}
                 None if peer.stop => break,
+                None if peer.token.is_none() => {
+                    peer.fail("Host handshake failed · check Vesper versions");
+                    break;
+                }
                 None => {
                     peer.note_failure();
                     if peer.sleep_or_leave(&mut cmd_rx).await {
@@ -144,9 +151,34 @@ impl Peer {
     async fn dial(&mut self) -> Option<()> {
         let sock = match timeout(HANDSHAKE, TcpStream::connect(&self.addr)).await {
             Ok(Ok(sock)) => sock,
-            _ => return None,
+            result => {
+                // Initial joins must finish with actionable feedback. Established
+                // seats keep retrying with their private token after a disconnect.
+                if self.token.is_none() {
+                    let reason = match result {
+                        Ok(Err(err)) if err.kind() == io::ErrorKind::ConnectionRefused => {
+                            "Connection refused · check host address and port"
+                        }
+                        Err(_) => "Connection timed out · check host firewall and network",
+                        Ok(Err(err)) if err.kind() == io::ErrorKind::TimedOut => {
+                            "Connection timed out · check host firewall and network"
+                        }
+                        _ => "Cannot reach host · check address, network and firewall",
+                    };
+                    self.fail(reason);
+                }
+                return None;
+            }
         };
-        let mut conn = Conn::new(sock);
+        let mut conn =
+            match timeout(HANDSHAKE, Conn::initiate(sock, self.fingerprint.as_deref())).await {
+                Ok(Ok(conn)) => conn,
+                Ok(Err(err)) if err.kind() == io::ErrorKind::InvalidData => {
+                    self.fail(err.to_string());
+                    return None;
+                }
+                _ => return None,
+            };
         let hello = if let Some(token) = &self.token {
             Frame::Resume {
                 protocol_version: protocol::PROTOCOL_VERSION,
@@ -162,7 +194,7 @@ impl Peer {
         if !conn.send(&hello).await {
             return None;
         }
-        let reply = match timeout(HANDSHAKE, conn.stream.next()).await {
+        let reply = match timeout(HANDSHAKE, conn.recv()).await {
             Ok(Some(Ok(line))) => protocol::from_line(&line)?,
             _ => return None,
         };
@@ -258,7 +290,7 @@ impl Peer {
         tokio::select! {
             biased;
             cmd = cmd_rx.recv() => Wake::Cmd(cmd),
-            line = conn.stream.next() => Wake::Line(line),
+            line = conn.recv() => Wake::Line(line),
             _ = ticker.tick() => Wake::Tick,
         }
     }

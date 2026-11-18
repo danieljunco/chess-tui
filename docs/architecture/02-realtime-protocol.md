@@ -4,7 +4,7 @@
 
 ## Transport
 
-Plain TCP, default port `4747`. One UTF-8 JSON object per line (`\n`). Maximum line 64 KiB; longer frames close the connection. Unknown `type`s or fields are rejected (`deny_unknown_fields`). **No encryption in the MVP** — use trusted networks, VPN overlays, or SSH tunnels.
+Plain TCP, default port `4747`, then a Noise_XX handshake. After that, each JSON object is one length-prefixed ciphertext (maximum plaintext 64 KiB). Unknown `type`s or fields are rejected (`deny_unknown_fields`). The host's static-key fingerprint is shown on the waiting screen and may be passed to `vesper join` to pin the host. A friend outside the LAN still needs a forwarded port or a VPN address.
 
 ## Handshake (first frame from peer, within 5 s)
     10|
@@ -65,5 +65,5 @@ Connection status (`LIVE`, `RECONNECTING`, `OFFLINE`) is **derived locally** fro
 - **Simultaneous commands (host + peer):** the host serializes all `Session` mutations on one task; the version check rejects the loser.
 - **Slow peer:** bounded outbound queue; overflow drops the connection, peer resumes and resyncs.
 - **Host quits/crashes:** game is lost (in-memory). Peer shows `Host closed the game` / `Host unreachable`.
-- **Eavesdropping / tampering on the network:** not mitigated in MVP (plaintext). Documented; Noise/QUIC upgrade path in ADR-002.
+- **Eavesdropping on the network:** the JSON session is inside Noise_XX. A mismatched host fingerprint is refused when the guest was given one. Without the fingerprint, encryption still runs but the guest is not pinning the host key.
 - **Malicious host:** can cheat by construction (it is the authority). Accepted for private games.

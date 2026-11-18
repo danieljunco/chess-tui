@@ -10,7 +10,7 @@ use vesper_chess::app::fixtures::demo_factory;
 use vesper_chess::app::mock::{MockMode, MockProvider};
 use vesper_chess::app::{App, JoinForm, ProviderFactory, Screen, StartRequest, validate_join};
 use vesper_chess::domain::Color;
-use vesper_chess::net::{HostProvider, NetConfig, PeerProvider};
+use vesper_chess::net::{HostProvider, NetConfig, PeerProvider, normalize_fingerprint};
 use vesper_chess::ui::{self, theme::Theme};
 
 /// Peer-to-peer chess for the terminal.
@@ -50,6 +50,8 @@ enum Command {
         address: String,
         /// Invite code from the host's waiting screen. Asked in the app if omitted.
         code: Option<String>,
+        /// Host key from the waiting screen. Pins the encrypted connection.
+        fingerprint: Option<String>,
         /// Name shown to the host.
         #[arg(long, default_value = "You")]
         name: String,
@@ -116,6 +118,7 @@ fn main() -> ExitCode {
         Some(Command::Join {
             address,
             code,
+            fingerprint,
             name,
         }) => {
             let mut cfg = NetConfig::default();
@@ -123,7 +126,19 @@ fn main() -> ExitCode {
             let mut app = App::new(p2p_factory(cfg), now);
             match code {
                 Some(code) => match validate_join(&address, &code) {
-                    Ok((addr, code)) => app.start(StartRequest::Join { addr, code }),
+                    Ok((addr, code)) => {
+                        if let Some(fp) = &fingerprint
+                            && normalize_fingerprint(fp).is_none()
+                        {
+                            eprintln!("vesper: the host key looks like A1B2C3D4-E5F60718");
+                            return ExitCode::from(2);
+                        }
+                        app.start(StartRequest::Join {
+                            addr,
+                            code,
+                            fingerprint,
+                        })
+                    }
                     Err((_, message)) => {
                         eprintln!("vesper: {message}");
                         return ExitCode::from(2);
@@ -161,9 +176,16 @@ fn main() -> ExitCode {
 fn p2p_factory(cfg: NetConfig) -> ProviderFactory {
     Box::new(move |request, now| match request {
         StartRequest::Host => Box::new(HostProvider::start(cfg.clone())),
-        StartRequest::Join { addr, code } => {
-            Box::new(PeerProvider::start(addr, code, cfg.name.clone()))
-        }
+        StartRequest::Join {
+            addr,
+            code,
+            fingerprint,
+        } => Box::new(PeerProvider::start(
+            addr,
+            code,
+            cfg.name.clone(),
+            fingerprint,
+        )),
         StartRequest::Local => Box::new(MockProvider::new(MockMode::Local, now)),
     })
 }

@@ -1,16 +1,17 @@
-//! One direct TCP connection. Frames are newline-delimited JSON, capped at 64 KiB.
+//! One direct TCP connection. A Noise handshake runs first. After that every
+//! JSON frame is one length-prefixed ciphertext.
 
+use std::io;
 use std::time::{Duration, Instant};
 
-use futures_util::{SinkExt, StreamExt};
+use snow::TransportState;
 use tokio::net::TcpStream;
 use tokio::time::timeout;
-use tokio_util::codec::{Framed, LinesCodec};
 
+use super::noise::{self, HostKey};
 use crate::protocol::{self, Frame};
 
-pub type Fr = Framed<TcpStream, LinesCodec>;
-pub type Line = Option<Result<String, tokio_util::codec::LinesCodecError>>;
+pub type Line = Option<Result<String, io::Error>>;
 
 pub const PING_EVERY: Duration = Duration::from_secs(2);
 pub const DEAD_AFTER: Duration = Duration::from_secs(6);
@@ -18,38 +19,58 @@ pub const HANDSHAKE: Duration = Duration::from_secs(5);
 const WRITE_LIMIT: Duration = Duration::from_secs(2);
 
 pub struct Conn {
-    sink: futures_util::stream::SplitSink<Fr, String>,
-    pub stream: futures_util::stream::SplitStream<Fr>,
+    sock: TcpStream,
+    noise: TransportState,
     pub last_rx: Instant,
 }
 
 impl Conn {
-    pub fn new(sock: TcpStream) -> Self {
+    pub async fn accept(mut sock: TcpStream, key: &HostKey) -> io::Result<Self> {
         let _ = sock.set_nodelay(true);
-        Self::from_framed(Framed::new(sock, codec()))
+        let noise = noise::accept(&mut sock, key).await?;
+        Ok(Self {
+            sock,
+            noise,
+            last_rx: Instant::now(),
+        })
     }
 
-    pub fn from_framed(framed: Fr) -> Self {
-        let (sink, stream) = framed.split();
-        Self {
-            sink,
-            stream,
+    pub async fn initiate(mut sock: TcpStream, expect: Option<&str>) -> io::Result<Self> {
+        let _ = sock.set_nodelay(true);
+        let noise = noise::initiate(&mut sock, expect).await?;
+        Ok(Self {
+            sock,
+            noise,
             last_rx: Instant::now(),
-        }
+        })
     }
 
     pub async fn send(&mut self, frame: &Frame) -> bool {
         let line = protocol::to_line(frame);
-        matches!(timeout(WRITE_LIMIT, self.sink.send(line)).await, Ok(Ok(())))
+        matches!(
+            timeout(
+                WRITE_LIMIT,
+                noise::send_plain(&mut self.sock, &mut self.noise, line.as_bytes())
+            )
+            .await,
+            Ok(Ok(()))
+        )
+    }
+
+    pub async fn recv(&mut self) -> Line {
+        match noise::recv_plain(&mut self.sock, &mut self.noise).await {
+            Ok(bytes) => Some(
+                String::from_utf8(bytes)
+                    .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err)),
+            ),
+            Err(err) if err.kind() == io::ErrorKind::UnexpectedEof => None,
+            Err(err) => Some(Err(err)),
+        }
     }
 
     pub fn idle(&self) -> bool {
         self.last_rx.elapsed() > DEAD_AFTER
     }
-}
-
-pub fn codec() -> LinesCodec {
-    LinesCodec::new_with_max_length(protocol::MAX_FRAME)
 }
 
 pub fn touch(conn: &mut Conn) {

@@ -83,9 +83,59 @@ Same two commands. The host screen prints the address to share, for example `192
 cargo run --release -- join 192.168.1.20:4747 K7QF-M2XA --name Ben
 ```
 
-Vesper does not punch through a home router on its own. The messages are not encrypted, so play with people you trust.
+Vesper does not punch through a home router on its own. The chess messages are encrypted. The host screen shows a key; pass it on the join command when the other player is not on your own machine.
 
 Leaving the host ends the game. If the guest's connection drops, the game stays open while the host is still running, and the guest's app tries to reconnect by itself.
+
+## Troubleshooting connections
+
+For two laptops, join the **hosting laptop's LAN address**, such as
+`192.168.1.104:4747`. `127.0.0.1` and `localhost` only reach the laptop running
+the join command. Keep the host's waiting screen open and use its current invite code.
+
+If joining times out, check TCP reachability from the guest (macOS):
+
+```bash
+nc -vz -G 5 192.168.1.104 4747
+```
+
+On the Linux host, confirm Vesper is listening:
+
+```bash
+ss -ltnp 'sport = :4747'
+```
+
+Expect `0.0.0.0:4747` for the default IPv4 listener. If it shows
+`127.0.0.1:4747`, restart with `vesper host --bind 0.0.0.0 --port 4747`.
+A refused connection usually means the address or port is wrong, the host has
+stopped, or a firewall is rejecting connections. A timeout can mean a firewall
+is dropping connections or the laptops cannot reach each other. Ping succeeding
+does not prove TCP port 4747 is allowed.
+
+### Omarchy / UFW firewall
+
+[Omarchy blocks incoming connections by default](https://omarchy.org/manual/networking/).
+On the **hosting laptop**, check the firewall and allow TCP 4747 from your guest's
+network. For a home LAN using `192.168.1.0/24`:
+
+```bash
+sudo ufw status verbose
+sudo ufw allow proto tcp from 192.168.1.0/24 to any port 4747
+```
+
+Replace the subnet with your actual LAN subnet, or use the guest's exact IP to
+allow only that laptop. Use your chosen port if you changed `--port`. The rule
+persists across reboots; Vesper's package leaves firewall policy under your control.
+Retry joining with the host's invite code. To remove this rule later:
+
+```bash
+sudo ufw delete allow proto tcp from 192.168.1.0/24 to any port 4747
+```
+
+If the port still times out, check that both laptops are on the same LAN and
+that the Wi-Fi network does not isolate guests or wireless clients. If TCP
+connects but Vesper rejects the invite or handshake, use a fresh invite and
+matching Vesper versions on both laptops.
 
 ## Other ways to start
 
@@ -153,7 +203,7 @@ Two people start the same app in separate terminals; one runs `vesper host`, the
 
 **Fixed for MVP:** Rust, Ratatui, Crossterm, Tokio, two humans, **peer-to-peer with an authoritative hosting peer** (no central server), direct TCP transport, untimed games, address + invite-code join, no accounts, no AI.
 
-**Decided in CHESS-01** (see [`docs/decisions/`](docs/decisions/)): host-peer topology (ADR-001), TCP + NDJSON transport and plaintext-MVP security posture (ADR-002), invite code vs seat token (ADR-003), snapshot sync/versions/idempotency (ADR-004), shakmaty + explicit draw rules (ADR-005), single-package layout and terminal baseline (ADR-006).
+**Decided in CHESS-01** (see [`docs/decisions/`](docs/decisions/)): host-peer topology (ADR-001), TCP plus a Noise_XX handshake and then JSON frames (ADR-002), invite code vs seat token (ADR-003), snapshot sync/versions/idempotency (ADR-004), shakmaty + explicit draw rules (ADR-005), single-package layout and terminal baseline (ADR-006).
 
 **Connectivity:** direct reachable addresses only — same LAN, VPN overlay (Tailscale/WireGuard/ZeroTier), SSH tunnel or a forwarded port. NAT traversal and relays are out of scope; traffic is unencrypted in the MVP.
 

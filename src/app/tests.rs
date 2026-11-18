@@ -314,6 +314,7 @@ fn demo_drop_pauses_moves_then_recovers() {
     app.start(StartRequest::Join {
         addr: "192.168.1.20:4747".into(),
         code: "K7QF-M2XA".into(),
+        fingerprint: None,
     });
     app.tick(start + Duration::from_secs(2));
     app.on_key(key(KeyCode::Char('x')));

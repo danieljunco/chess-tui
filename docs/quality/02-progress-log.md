@@ -79,3 +79,32 @@ P2P is the default path as of this entry. `vesper host` / `vesper join` / the ho
 - Deviation from visual spec: filled glyphs for both sides in colour mode (ADR-006), with outline White in mono.
 - Draw by agreement is not in MVP; claimable draws use the simplified current-position rule (ADR-005).
 - Move numbers assume games start from move 1 (fixtures do); custom-FEN numbering is a known gap.
+
+## LAN connection troubleshooting (2026-11-18)
+
+- Investigated an Omarchy host at `192.168.1.104:4747`: the user confirmed
+  `0.0.0.0:4747` listening, this Mac received three ping replies, and its TCP
+  probe timed out. This is consistent with a firewall dropping TCP; the actual
+  host firewall state and successful connection after a rule change remain unverified.
+- Initial TCP failures now produce concise address/firewall/network guidance
+  instead of retrying forever on the connecting screen. Failed initial handshakes
+  also terminate with feedback. Token-based reconnection remains enabled.
+- Added regression tests for a refused initial connection and a silent host's
+  five-second handshake deadline. Increased the polling test deadline to eight
+  seconds to accommodate the real handshake timeout.
+- Added README troubleshooting for LAN addresses, listener checks, TCP probes,
+  scoped UFW rules and removal, and Wi-Fi isolation. The Arch recipe now installs
+  the README under `/usr/share/doc/vesper-chess/README.md`.
+- Recorded firewall-policy ownership in ADR-007. No automatic firewall changes,
+  extra privileges or hosted services were introduced.
+- Validation: `cargo fmt --check` passed;
+  `cargo clippy --all-targets --all-features -- -D warnings` passed;
+  `cargo test --workspace` passed (55 tests). The initial sandboxed test run
+  failed because socket binding was denied; the successful run used approved
+  execution outside the sandbox. `bash -n packaging/arch/PKGBUILD` and
+  `git diff --check` passed.
+- Not verified: real two-laptop play after a firewall change, TCP connect timeout
+  against a deliberately dropping firewall, manual visual review of the new
+  status messages, or building/installing the package on Arch. No release was
+  published; the recipe still targets the existing v0.1.0 source archive, so
+  these changes must ship in a subsequent release to reach package users.

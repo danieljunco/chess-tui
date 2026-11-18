@@ -286,5 +286,7 @@ pub fn demo_waiting() -> WaitingInfo {
         port: 4747,
         invite: DEMO_INVITE.into(),
         seat: Color::White,
+        fingerprint: "A1B2C3D4-E5F60718".into(),
+        public_ip: None,
     }
 }

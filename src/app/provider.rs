@@ -92,6 +92,10 @@ pub struct WaitingInfo {
     pub port: u16,
     pub invite: String,
     pub seat: Color,
+    /// Noise static-key fingerprint. Empty until the host has generated one.
+    pub fingerprint: String,
+    /// Address seen by a public STUN server, when it differs from the LAN address.
+    pub public_ip: Option<String>,
 }
 
 #[derive(Clone, Debug)]

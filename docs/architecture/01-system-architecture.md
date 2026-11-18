@@ -85,7 +85,7 @@ PEER:  Connecting ──welcome──► Active ──timeout/EOF──► Recon
 
 ## Reachability (be honest)
     80|
-MVP supports **direct reachable addresses**: same LAN, VPN/overlay networks (Tailscale, WireGuard, ZeroTier), SSH tunnels, or manual port forwarding. Arbitrary internet peers behind NAT are **not** supported; NAT traversal, relays and public matchmaking are out of scope unless explicitly approved. Traffic is unencrypted in the MVP (ADR-002).
+MVP supports **direct reachable addresses**: same LAN, VPN/overlay networks (Tailscale, WireGuard, ZeroTier), SSH tunnels, or manual port forwarding. Arbitrary internet peers behind NAT are **not** supported; NAT traversal, relays and public matchmaking are out of scope unless explicitly approved. Chess messages are encrypted with Noise_XX (ADR-002). NAT traversal and relays are still out of scope.
 
 ## Technology
 

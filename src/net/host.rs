@@ -6,13 +6,12 @@ use std::io;
 use std::net::IpAddr;
 use std::time::{Duration, Instant};
 
-use futures_util::{SinkExt, StreamExt};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::mpsc::{Receiver, Sender, UnboundedReceiver, UnboundedSender};
 use tokio::time::{MissedTickBehavior, interval, sleep, timeout};
-use tokio_util::codec::Framed;
 
-use super::conn::{self, Conn, HANDSHAKE, PING_EVERY, codec};
+use super::conn::{self, Conn, HANDSHAKE, PING_EVERY};
+use super::noise::HostKey;
 use crate::app::{
     GameCommand, GameProvider, GameView, Link, ProviderEvent, Seat, Table, WaitingInfo,
 };
@@ -58,6 +57,7 @@ enum Grant {
 
 struct Host {
     cfg: NetConfig,
+    key: HostKey,
     session: Session,
     conn: Option<Conn>,
     ev: UnboundedSender<ProviderEvent>,
@@ -144,14 +144,27 @@ async fn run(
         .map(|ip| format!("{ip}:{port}"))
         .unwrap_or_else(|| format!("127.0.0.1:{port}"));
     let invite = new_invite();
+    let key = HostKey::generate();
+    let public_ip = tokio::time::timeout(
+        std::time::Duration::from_secs(1),
+        tokio::task::spawn_blocking(super::public_ipv4),
+    )
+    .await
+    .ok()
+    .and_then(|found| found.ok())
+    .flatten()
+    .filter(|ip| !addresses.iter().any(|own| own == ip));
     let _ = ev.send(ProviderEvent::Waiting(WaitingInfo {
         addresses,
         port,
         invite: invite.clone(),
         seat: cfg.color,
+        fingerprint: key.fingerprint.clone(),
+        public_ip,
     }));
     let mut host = Host {
         session: Session::new(cfg.color, &cfg.name, invite),
+        key,
         cfg,
         conn: None,
         ev,
@@ -193,7 +206,7 @@ async fn wait(
         tokio::select! {
             biased;
             cmd = cmd_rx.recv() => Wake::Cmd(cmd),
-            line = conn.stream.next() => Wake::Line(line),
+            line = conn.recv() => Wake::Line(line),
             accepted = listener.accept() => Wake::Accept(accepted),
             _ = ticker.tick() => Wake::Tick,
         }
@@ -335,15 +348,17 @@ impl Host {
     }
 
     async fn handshake(&mut self, sock: TcpStream) {
-        let _ = sock.set_nodelay(true);
-        let mut framed = Framed::new(sock, codec());
-        let first = match timeout(HANDSHAKE, framed.next()).await {
+        let mut conn = match timeout(HANDSHAKE, Conn::accept(sock, &self.key)).await {
+            Ok(Ok(conn)) => conn,
+            _ => return,
+        };
+        let first = match timeout(HANDSHAKE, conn.recv()).await {
             Ok(Some(Ok(line))) => line,
             _ => return,
         };
         let Some(frame) = protocol::from_line(&first) else {
             self.reply(
-                &mut framed,
+                &mut conn,
                 &protocol::refuse(RefuseCode::Malformed, RefuseCode::Malformed.message()),
             )
             .await;
@@ -357,7 +372,7 @@ impl Host {
             } => {
                 if protocol_version != protocol::PROTOCOL_VERSION {
                     self.reply(
-                        &mut framed,
+                        &mut conn,
                         &protocol::refuse(RefuseCode::BadVersion, RefuseCode::BadVersion.message()),
                     )
                     .await;
@@ -370,7 +385,7 @@ impl Host {
                     Ok(joined) => Grant::New(joined),
                     Err(JoinError::BadInvite) => {
                         self.reply_later(
-                            &mut framed,
+                            &mut conn,
                             &protocol::refuse(
                                 RefuseCode::BadInvite,
                                 RefuseCode::BadInvite.message(),
@@ -381,7 +396,7 @@ impl Host {
                     }
                     Err(JoinError::SeatTaken) => {
                         self.reply(
-                            &mut framed,
+                            &mut conn,
                             &protocol::refuse(
                                 RefuseCode::SeatTaken,
                                 RefuseCode::SeatTaken.message(),
@@ -392,7 +407,7 @@ impl Host {
                     }
                     Err(JoinError::GameOver) => {
                         self.reply(
-                            &mut framed,
+                            &mut conn,
                             &protocol::refuse(RefuseCode::GameOver, RefuseCode::GameOver.message()),
                         )
                         .await;
@@ -407,7 +422,7 @@ impl Host {
             } => {
                 if protocol_version != protocol::PROTOCOL_VERSION {
                     self.reply(
-                        &mut framed,
+                        &mut conn,
                         &protocol::refuse(RefuseCode::BadVersion, RefuseCode::BadVersion.message()),
                     )
                     .await;
@@ -417,7 +432,7 @@ impl Host {
                     Ok(seat) => Grant::Back(seat),
                     Err(_) => {
                         self.reply_later(
-                            &mut framed,
+                            &mut conn,
                             &protocol::refuse(RefuseCode::BadToken, RefuseCode::BadToken.message()),
                         )
                         .await;
@@ -427,14 +442,14 @@ impl Host {
             }
             _ => {
                 self.reply(
-                    &mut framed,
+                    &mut conn,
                     &protocol::refuse(RefuseCode::Malformed, RefuseCode::Malformed.message()),
                 )
                 .await;
                 return;
             }
         };
-        self.conn = Some(Conn::from_framed(framed));
+        self.conn = Some(conn);
         self.saw_peer = true;
         self.rtt = None;
         let (seat, token) = match grant {
@@ -451,14 +466,13 @@ impl Host {
         self.emit_view();
     }
 
-    async fn reply(&self, framed: &mut conn::Fr, frame: &Frame) {
-        let line = protocol::to_line(frame);
-        let _ = timeout(Duration::from_secs(2), framed.send(line)).await;
+    async fn reply(&self, conn: &mut Conn, frame: &Frame) {
+        let _ = timeout(Duration::from_secs(2), conn.send(frame)).await;
     }
 
-    async fn reply_later(&self, framed: &mut conn::Fr, frame: &Frame) {
+    async fn reply_later(&self, conn: &mut Conn, frame: &Frame) {
         sleep(self.cfg.fail_delay).await;
-        self.reply(framed, frame).await;
+        self.reply(conn, frame).await;
     }
 
     async fn send(&mut self, frame: &Frame) {

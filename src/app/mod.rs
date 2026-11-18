@@ -19,7 +19,11 @@ const STATUS_TTL: Duration = Duration::from_millis(4500);
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum StartRequest {
     Host,
-    Join { addr: String, code: String },
+    Join {
+        addr: String,
+        code: String,
+        fingerprint: Option<String>,
+    },
     Local,
 }
 
@@ -299,6 +303,8 @@ impl App {
                 port: DEFAULT_PORT,
                 invite: String::new(),
                 seat: Color::White,
+                fingerprint: String::new(),
+                public_ip: None,
             }),
             StartRequest::Join { addr, .. } => Screen::Connecting { addr },
             StartRequest::Local => Screen::Connecting {
@@ -478,7 +484,11 @@ impl App {
                     return;
                 }
                 match validate_join(&form.address, &form.code) {
-                    Ok((addr, code)) => self.start(StartRequest::Join { addr, code }),
+                    Ok((addr, code)) => self.start(StartRequest::Join {
+                        addr,
+                        code,
+                        fingerprint: None,
+                    }),
                     Err(err) => form.error = Some(err),
                 }
             }
