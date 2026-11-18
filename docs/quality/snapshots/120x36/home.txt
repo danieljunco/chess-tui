@@ -1,0 +1,36 @@
+ ♞ VESPER  /  HOME   DEMO DATA                                                                                   v0.1.0
+
+
+
+
+
+
+
+                                                 ♜  ♞  ♝  ♛  ♚  ♝  ♞  ♜
+
+                                                       V E S P E R
+                                                        C H E S S
+
+                                                  ─────────────────────
+
+                                             ▸  Host a game
+                                                Join a game
+                                                Local game · pass & play
+                                                How to play
+                                                Quit
+
+                                    Open a table on this machine and invite a friend
+
+                                         PEER TO PEER · LIVE · IN YOUR TERMINAL
+
+
+
+
+
+
+
+
+
+
+
+ ↑↓ Navigate   ↵ Select   ? Help   q Quit

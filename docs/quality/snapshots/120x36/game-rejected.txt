@@ -1,0 +1,36 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA                                                    ● LIVE · 24 ms
+ ╭ GAME ────────────────╮                                                                  ╭ TABLE ───────────────────╮
+ │  YOUR MOVE           │       Ben  BLACK                                      ♝♟♟ +4     │ ♔ You              ● you │
+ │ White · move 8       │                                                                  │ ♚ Ben           ● online │
+ │                      │        a      b      c      d      e      f      g      h        │                          │
+ │ LAST MOVE            │  ▎                                                               │ Hosted on this terminal  │
+ │ 7… Qxd5  d8 → d5     │  ▎8    ♜             ♝             ♚      ♝             ♜    8   │ 192.168.1.20:4747 · v15  │
+ │                      │  ▎                                                               │                          │
+ │ YOU PLAY             │  ▎                                                               ╰──────────────────────────╯
+ │ White                │  ▎7    ♟      ♟      ♟                    ♟      ♟      ♟    7   ╭ MOVES ───────────────────╮
+ │                      │  ▎                                                               │   1. e4       e5         │
+ ╰──────────────────────╯  ▎                                                               │   2. Nf3      Nc6        │
+ ╭ ACTIONS ─────────────╮  ▎6                  ♞                                       6   │   3. Bc4      Nf6        │
+ │   Resign           r │  ▎                                                               │   4. d4       exd4       │
+ │   Flip board       o │  ▎                                                               │   5. O-O      Nxe4       │
+ │   Piece style      g │  ▎5                         ♛                                5   │   6. Re1      d5         │
+ │   Leave table      q │  ▎                                                               │   7. Bxd5     Qxd5       │
+ ╰──────────────────────╯  ▎                ┏     ┓                                        │                          │
+                           ▎4                         ♟      ♞                         4   │                          │
+                           ▎                ┗     ┛                                        │                          │
+                           ▎                                                               │                          │
+                           ▎3    •             •                    ♞                  3   │                          │
+                           ▎                                                               │                          │
+                           ▎                                                               │                          │
+                           ▎2    ♟      ♟      ♟      •             ♟      ♟      ♟    2   │                          │
+                           ▎                                                               │                          │
+                           ▎                                                               │                          │
+                           ▎1    ♜      ♞      ♝      ♛      ♜             ♚           1   │                          │
+                           ▎                                                               │                          │
+                                 a      b      c      d      e      f      g      h        │                          │
+                                                                                           │                          │
+                              ▶ You  WHITE                                           ♟     │                          │
+                                                                                           │                          │
+                                                                                           ╰──────────────────────────╯
+ ● Illegal move · choose a highlighted square
+ ↑↓←→ Cursor   ↵ Select   Esc Clear   / Type move   Tab Focus   o Flip   ? Help   r Resign   x Simulate drop

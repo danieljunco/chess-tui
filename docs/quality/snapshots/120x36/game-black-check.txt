@@ -1,0 +1,36 @@
+ ♞ VESPER  /  JOINED · 192.168.1.20:4747   DEMO DATA                                                     ● LIVE · 24 ms
+ ╭ GAME ────────────────╮                                                                  ╭ TABLE ───────────────────╮
+ │  CHECK               │       Ana  WHITE                                                 │ ♔ Ana           ● online │
+ │ Protect your king    │                                                                  │ ♚ You              ● you │
+ │                      │        h      g      f      e      d      c      b      a        │                          │
+ │ LAST MOVE            │  ▎                                                               │ Connected to host        │
+ │ 2. Qh5+  d1 → h5     │  ▎1    ♜      ♞      ♝      ♚             ♝      ♞      ♜    1   │ 192.168.1.20:4747 · v4   │
+ │                      │  ▎                                                               │                          │
+ │ YOU PLAY             │  ▎                                                               ╰──────────────────────────╯
+ │ Black                │  ▎2    ♟      ♟      ♟             ♟      ♟      ♟      ♟    2   ╭ MOVES ───────────────────╮
+ │                      │  ▎                                                               │   1. e4       f6         │
+ ╰──────────────────────╯  ▎                                                               │   2. Qh5+                │
+ ╭ ACTIONS ─────────────╮  ▎3                                                          3   │                          │
+ │   Resign           r │  ▎                                                               │                          │
+ │   Flip board       o │  ▎                                                               │                          │
+ │   Piece style      g │  ▎4                         ♟                                4   │                          │
+ │   Leave table      q │  ▎                                                               │                          │
+ ╰──────────────────────╯  ▎                                                               │                          │
+                           ▎5    ♛                                                     5   │                          │
+                           ▎                                                               │                          │
+                           ▎                                                               │                          │
+                           ▎6           •      ♟                                       6   │                          │
+                           ▎                                                               │                          │
+                           ▎         ┏     ┓                                               │                          │
+                           ▎7    ♟      ♟             ♟      ♟      ♟      ♟      ♟    7   │                          │
+                           ▎         ┗     ┛                                               │                          │
+                           ▎                            !                                  │                          │
+                           ▎8    ♜      ♞      ♝      ♚      ♛      ♝      ♞      ♜    8   │                          │
+                           ▎                                                               │                          │
+                                 h      g      f      e      d      c      b      a        │                          │
+                                                                                           │                          │
+                              ▶ You  BLACK                                                 │                          │
+                                                                                           │                          │
+                                                                                           ╰──────────────────────────╯
+ g7 selected · 1 legal square marked •
+ ↑↓←→ Cursor   ↵ Select   Esc Clear   / Type move   Tab Focus   o Flip   ? Help   r Resign   x Simulate drop

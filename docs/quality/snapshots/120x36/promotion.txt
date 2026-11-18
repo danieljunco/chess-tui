@@ -1,0 +1,36 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA                                                    ● LIVE · 24 ms
+ ╭ GAME ────────────────╮                                                                  ╭ TABLE ───────────────────╮
+ │  YOUR MOVE           │       Ben  BLACK                                                 │ ♔ You              ● you │
+ │ White · move 2       │                                                                  │ ♚ Ben           ● online │
+ │                      │        a      b      c      d      e      f      g      h        │                          │
+ │ LAST MOVE            │            ┏     ┓                                               │ Hosted on this terminal  │
+ │ 1… Kf8  g8 → f8      │   8                         ♜             ♚                  8   │ 192.168.1.20:4747 · v3   │
+ │                      │            ┗     ┛                                               │                          │
+ │ YOU PLAY             │                                                                  ╰──────────────────────────╯
+ │ White                │   7           ♟                           ♟      ♟      ♟    7   ╭ MOVES ───────────────────╮
+ │                      │                                                                  │   1. Kf1      Kf8        │
+ ╰──────────────────────╯                                                                  │                          │
+ ╭ ACTIONS ─────────────╮   6 ╭ PROMOTE YOUR PAWN ───────────────────────────────────────╮ │                          │
+ │   Resign           r │     │                                                          │ │                          │
+ │   Flip board       o │     │                Choose a piece for b7 → b8                │ │                          │
+ │   Piece style      g │   5 │                                                          │ │                          │
+ │   Leave table      q │     │      Q ♛ Queen   R ♜ Rook   B ♝ Bishop   N ♞ Knight      │ │                          │
+ ╰──────────────────────╯     │                                                          │ │                          │
+                            4 │                  ↵ Confirm    Esc Cancel                 │ │                          │
+                              │                                                          │ │                          │
+                              │                                                          │ │                          │
+                            3 ╰──────────────────────────────────────────────────────────╯ │                          │
+                                                                                           │                          │
+                                                                                           │                          │
+                            2                                       ♟      ♟      ♟    2   │                          │
+                                                                                           │                          │
+                                                                                           │                          │
+                            1                                       ♚                  1   │                          │
+                                                                                           │                          │
+                                 a      b      c      d      e      f      g      h        │                          │
+                                                                                           │                          │
+                              ▶ You  WHITE                                                 │                          │
+                                                                                           │                          │
+                                                                                           ╰──────────────────────────╯
+ Your move · White  — select a piece with ↵, or press / to type e2e4
+ ←→ Choose   Q R B N Pick   ↵ Confirm   Esc Cancel

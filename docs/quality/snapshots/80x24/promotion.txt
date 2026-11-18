@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA            ● LIVE · 24 ms
+       Ben  BLACK                                  ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  YOUR MOVE               │
+          ┏   ┓       ♜         ♚                  │ White · move 2           │
+   8      ┗   ┛                               8    │                          │
+            ♟                   ♟    ♟    ♟        │ LAST MOVE                │
+   7      ╭ PROMOTE YOUR PAWN ───────────────────────────────────────╮        │
+          │                                                          │        │
+   6      │                Choose a piece for b7 → b8                │        │
+          │                                                          │────────╯
+   5      │      Q ♛ Queen   R ♜ Rook   B ♝ Bishop   N ♞ Knight      │────────╮
+          │                                                          │        │
+   4      │                  ↵ Confirm    Esc Cancel                 │        │
+          │                                                          │        │
+   3      │                                                          │        │
+          ╰──────────────────────────────────────────────────────────╯────────╯
+   2                                          2    ╭ ACTIONS ─────────────────╮
+                                ♚                  │   Resign               r │
+   1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+     ▶ You  WHITE                                  │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ Your move · White  — select a piece with ↵, or press / to type e2e4
+ ←→ Choose   Q R B N Pick   ↵ Confirm   Esc Cancel

@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA        ○ OPPONENT OFFLINE
+       Ben  BLACK  ○ offline           ♝♟♟ +4      ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  YOUR MOVE               │
+  ▎    ♜         ♝         ♚    ♝         ♜        │ White · move 8           │
+  ▎8                                          8    │                          │
+  ▎    ♟    ♟    ♟              ♟    ♟    ♟        │ LAST MOVE                │
+  ▎7                                          7    │ 7… Qxd5  d8 → d5         │
+  ▎              ♞                                 │                          │
+  ▎6                                          6    │                          │
+  ▎                   ♛                            ╰──────────────────────────╯
+  ▎5                                          5    ╭ MOVES ───────────────────╮
+  ▎                   ♟    ♞                       │   4. d4       exd4       │
+  ▎4                                          4    │   5. O-O      Nxe4       │
+  ▎                             ♞                  │   6. Re1      d5         │
+  ▎3                                          3    │   7. Bxd5     Qxd5       │
+  ▎    ♟    ♟    ♟       ┏   ┓  ♟    ♟    ♟        ╰──────────────────────────╯
+  ▎2                     ┗   ┛                2    ╭ ACTIONS ─────────────────╮
+  ▎    ♜    ♞    ♝    ♛    ♜         ♚             │   Resign               r │
+  ▎1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+     ▶ You  WHITE                           ♟      │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ ○ Opponent offline · the game is kept while you stay
+ ↑↓←→ Cursor   ↵ Select   / Type move   Tab Focus   o Flip   ? Help

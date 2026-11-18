@@ -1,0 +1,36 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA                                                    ● LIVE · 24 ms
+ ╭ GAME ────────────────╮                                                                  ╭ TABLE ───────────────────╮
+ │  GAME OVER           │       Ben  BLACK                                                 │ ♔ You              ● you │
+ │ White wins           │                                                                  │ ♚ Ben           ● online │
+ │ by checkmate         │        a      b      c      d      e      f      g      h        │                          │
+ │                      │  ▎                                   !                           │ Hosted on this terminal  │
+ │ LAST MOVE            │  ▎8    ♜             ♝      ♛      ♚      ♝             ♜    8   │ 192.168.1.20:4747 · v8   │
+ │ 4. Qxf7#  h5 → f7    │  ▎                                                               │                          │
+ │                      │  ▎                                                               ╰──────────────────────────╯
+ │ YOU PLAY             │  ▎7    ♟      ♟      ♟      ♟             ♛      ♟      ♟    7   ╭ MOVES ───────────────────╮
+ │ White                │  ▎                                                               │   1. e4       e5         │
+ ╰──────────────────────╯  ▎                                                               │   2. Bc4      Nc6        │
+ ╭ ACTIONS ─────────────╮  ▎6                  ♞                    ♞                  6   │   3. Qh5      Nf6        │
+ │   Flip board       o │  ▎                                                               │   4. Qxf7#               │
+ │   Piece style      g │  ▎                                                               │                          │
+ │   Back to home     q │  ▎5                                ♟                         5   │                          │
+ ╰──────────────────────╯  ▎                                                               │                          │
+                           ▎                                                               │                          │
+                           ▎4                  ♝             ♟                         4   │                          │
+                           ▎                                                               │                          │
+                           ▎                                                               │                          │
+                           ▎3                                                          3   │                          │
+                           ▎                                                               │                          │
+                           ▎                              ┏     ┓                          │                          │
+                           ▎2    ♟      ♟      ♟      ♟             ♟      ♟      ♟    2   │                          │
+                           ▎                              ┗     ┛                          │                          │
+                           ▎                                                               │                          │
+                           ▎1    ♜      ♞      ♝             ♚             ♞      ♜    1   │                          │
+                           ▎                                                               │                          │
+                                 a      b      c      d      e      f      g      h        │                          │
+                                                                                           │                          │
+                                You  WHITE                                        ♟ +1     │                          │
+                                                                                           │                          │
+                                                                                           ╰──────────────────────────╯
+ 1-0   Checkmate · White wins  · board is read-only
+ ↑↓←→ Cursor   Tab Focus   o Flip   n Home   q Quit
