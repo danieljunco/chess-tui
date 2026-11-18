@@ -1,0 +1,14 @@
+pkgbase = vesper-chess
+	pkgdesc = Peer-to-peer chess for the terminal
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/danieljunco/chess-tui
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	makedepends = rust
+	makedepends = cargo
+	source = vesper-chess-0.1.0.tar.gz::https://github.com/danieljunco/chess-tui/archive/refs/tags/v0.1.0.tar.gz
+	sha256sums = f4a5d0f743ca20daa96364442b4828059f440cdec659306f934b0e985bc0894d
+
+pkgname = vesper-chess

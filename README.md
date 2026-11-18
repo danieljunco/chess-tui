@@ -10,7 +10,26 @@ cd chess-tui
 cargo install --path .
 ```
 
-`cargo install` puts `vesper` on your `PATH` (usually `~/.cargo/bin`). Then, in two terminals:
+`cargo install` puts `vesper` on your `PATH` (usually `~/.cargo/bin`).
+
+On a Mac, Homebrew does that job instead:
+
+```bash
+brew tap danieljunco/tap
+brew install vesper
+```
+
+On Arch, including Omarchy, build the package from the recipe in this repo. It installs `/usr/bin/vesper` through pacman:
+
+```bash
+git clone https://github.com/danieljunco/chess-tui.git
+cd chess-tui/packaging/arch
+makepkg -si
+```
+
+Omarchy can install that same package once it is on the AUR (`omarchy pkg aur add vesper-chess`). The AUR entry is not published yet. The recipe above works today.
+
+Then, in two terminals:
 
 ```bash
 vesper host --name Ana
@@ -82,7 +101,7 @@ In demo mode, `x` previews a dropped connection. That key does nothing in a real
 
 ## Install the `vesper` command
 
-`cargo install --path .` is the install step. It builds a release binary and copies it to `~/.cargo/bin`. There is no crates.io package, no Homebrew formula, and no Arch package yet. A local release build also leaves the binary at `target/release/vesper`.
+`cargo install --path .` builds a release binary and copies it to `~/.cargo/bin`. Homebrew (`brew install vesper` after `brew tap danieljunco/tap`) and the Arch recipe in `packaging/arch` do the same install for their own package managers. There is no crates.io package yet. A local release build also leaves the binary at `target/release/vesper`.
 
 ## For contributors
 

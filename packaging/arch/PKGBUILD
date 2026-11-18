@@ -1,0 +1,27 @@
+# Maintainer: Mr Anderson <danieljunco@users.noreply.github.com>
+pkgname=vesper-chess
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Peer-to-peer chess for the terminal'
+arch=('x86_64' 'aarch64')
+url='https://github.com/danieljunco/chess-tui'
+license=('MIT')
+makedepends=('rust' 'cargo')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('f4a5d0f743ca20daa96364442b4828059f440cdec659306f934b0e985bc0894d')
+
+build() {
+  cd "chess-tui-$pkgver"
+  cargo build --locked --release --bin vesper
+}
+
+check() {
+  cd "chess-tui-$pkgver"
+  cargo test --locked --release --bin vesper
+}
+
+package() {
+  cd "chess-tui-$pkgver"
+  install -Dm755 target/release/vesper "$pkgdir/usr/bin/vesper"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
