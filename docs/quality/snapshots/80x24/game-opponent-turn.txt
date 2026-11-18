@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA            ● LIVE · 24 ms
+     ▶ Ben  BLACK                      ♝♟♟ +4      ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  OPPONENT THINKING       │
+       ♜         ♝         ♚    ♝         ♜        │ Black · move 8           │
+   8                                          8    │                          │
+       ♟    ♟    ♟              ♟    ♟    ♟        │ LAST MOVE                │
+   7                                          7    │ 8. Nc3  b1 → c3          │
+                 ♞                                 │                          │
+   6                                          6    │                          │
+                      ♛                            ╰──────────────────────────╯
+   5                                          5    ╭▍MOVES ───────────────────╮
+                      ♟    ♞                       │   5. O-O      Nxe4       │
+   4                                          4    │   6. Re1      d5         │
+                 ♞              ♞                  │   7. Bxd5     Qxd5       │
+   3                                          3    │   8. Nc3                 │
+       ♟    ♟    ♟       ┏   ┓  ♟    ♟    ♟        ╰──────────────────────────╯
+   2                     ┗   ┛                2    ╭ ACTIONS ─────────────────╮
+       ♜         ♝    ♛    ♜         ♚             │   Resign               r │
+   1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+       You  WHITE                           ♟      │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ ⠋ Waiting for Black's move
+ ↑↓ Scroll moves   / Type move   Tab Focus   o Flip   ? Help   r Resign

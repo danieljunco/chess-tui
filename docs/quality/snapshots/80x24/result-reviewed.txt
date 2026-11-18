@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA            ● LIVE · 24 ms
+       Ben  BLACK                                  ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  GAME OVER               │
+  ▎    ♜         ♝    ♛    ♚!   ♝         ♜        │ White wins               │
+  ▎8                                          8    │ by checkmate             │
+  ▎    ♟    ♟    ♟    ♟         ♛    ♟    ♟        │                          │
+  ▎7                                          7    │ LAST MOVE                │
+  ▎              ♞              ♞                  │ 4. Qxf7#  h5 → f7        │
+  ▎6                                          6    │                          │
+  ▎                        ♟                       ╰──────────────────────────╯
+  ▎5                                          5    ╭ MOVES ───────────────────╮
+  ▎              ♝         ♟                       │   1. e4       e5         │
+  ▎4                                          4    │   2. Bc4      Nc6        │
+  ▎                                                │   3. Qh5      Nf6        │
+  ▎3                                          3    │   4. Qxf7#               │
+  ▎    ♟    ♟    ♟    ♟  ┏   ┓  ♟    ♟    ♟        │                          │
+  ▎2                     ┗   ┛                2    ╰──────────────────────────╯
+  ▎    ♜    ♞    ♝         ♚         ♞    ♜        ╭ ACTIONS ─────────────────╮
+  ▎1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+       You  WHITE                        ♟ +1      │   Back to home         q │
+                                                   ╰──────────────────────────╯
+ 1-0   Checkmate · White wins  · board is read-only
+ ↑↓←→ Cursor   Tab Focus   o Flip   n Home   q Quit

@@ -1,0 +1,24 @@
+ ♞ VESPER  /  LOCAL GAME   DEMO DATA                              ◆ PASS & PLAY
+       Black  BLACK                    ♝♟♟ +4      ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  WHITE TO MOVE           │
+  ▎    ♜         ♝         ♚    ♝         ♜        │ White · move 8           │
+  ▎8                                          8    │                          │
+  ▎    ♟    ♟    ♟              ♟    ♟    ♟        │ LAST MOVE                │
+  ▎7                                          7    │ 7… Qxd5  d8 → d5         │
+  ▎              ♞                                 │                          │
+  ▎6                                          6    │                          │
+  ▎                   ♛                            ╰──────────────────────────╯
+  ▎5                                          5    ╭ MOVES ───────────────────╮
+  ▎                   ♟    ♞                       │   4. d4       exd4       │
+  ▎4                                          4    │   5. O-O      Nxe4       │
+  ▎                             ♞                  │   6. Re1      d5         │
+  ▎3                                          3    │   7. Bxd5     Qxd5       │
+  ▎    ♟    ♟    ♟       ┏   ┓  ♟    ♟    ♟        ╰──────────────────────────╯
+  ▎2                     ┗   ┛                2    ╭ ACTIONS ─────────────────╮
+  ▎    ♜    ♞    ♝    ♛    ♜         ♚             │   Resign               r │
+  ▎1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+     ▶ White  WHITE                         ♟      │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ Your move · White  — select a piece with ↵, or press / to type e2e4
+ ↑↓←→ Cursor   ↵ Select   / Type move   Tab Focus   o Flip   ? Help

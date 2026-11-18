@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA            ● LIVE · 24 ms
+       Ben  BLACK                      ♝♟♟ +4      ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  YOUR MOVE               │
+       ♜         ♝         ♚    ♝         ♜        │ White · move 8           │
+   8                                          8    │                          │
+       ♟    ♟    ♟              ♟    ♟    ♟        │ LAST MOVE                │
+   7                                          7    │ 7… Qxd5  d8 → d5         │
+              ╭ RESIGN THIS GAME? ───────────────────────────────╮            │
+   6          │                                                  │            │
+              │         Ben will be declared the winner.         │────────────╯
+   5          │                                                  │────────────╮
+              │           y Resign     Esc Keep playing          │ exd4       │
+   4          │                                                  │ Nxe4       │
+              │                                                  │ d5         │
+   3          ╰──────────────────────────────────────────────────╯ Qxd5       │
+       ♟    ♟    ♟       ┏   ┓  ♟    ♟    ♟        ╰──────────────────────────╯
+   2                     ┗   ┛                2    ╭ ACTIONS ─────────────────╮
+       ♜    ♞    ♝    ♛    ♜         ♚             │   Resign               r │
+   1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+     ▶ You  WHITE                           ♟      │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ Your move · White  — select a piece with ↵, or press / to type e2e4
+ ↵/y Confirm   Esc/n Cancel

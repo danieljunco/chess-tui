@@ -1,0 +1,36 @@
+ ♞ VESPER  /  JOINED · 192.168.1.20:4747   DEMO DATA                                                     ● LIVE · 24 ms
+ ╭ GAME ────────────────╮                                                                  ╭ TABLE ───────────────────╮
+ │  GAME OVER           │       Ana  WHITE                                        ♟ +1     │ ♔ Ana           ● online │
+ │ White wins           │                                                                  │ ♚ You              ● you │
+ │ by checkmate         │        h      g      f      e      d      c      b      a        │                          │
+ │                      │                                                                  │ Connected to host        │
+ │ LAST MOVE            │   1    ♜      ♞             ♚             ♝      ♞      ♜    1   │ 192.168.1.20:4747 · v8   │
+ │ 4. Qxf7#  h5 → f7    │                                                                  │                          │
+ │                      │                                                                  ╰──────────────────────────╯
+ │ YOU PLAY             │   2    ♟      ♟      ♟             ♟      ♟      ♟      ♟    2   ╭ MOVES ───────────────────╮
+ │ Black                │                                                                  │   1. e4       e5         │
+ ╰──────────────────────╯                                                                  │   2. Bc4      Nc6        │
+ ╭ ACTIONS ─────────────╮   3         ╭ GAME OVER ───────────────────────────────╮     3   │   3. Qh5      Nf6        │
+ │   Flip board       o │             │                                          │         │   4. Qxf7#               │
+ │   Piece style      g │             │                 CHECKMATE                │         │                          │
+ │   Back to home     q │   4         │                                          │     4   │                          │
+ ╰──────────────────────╯             │                White wins                │         │                          │
+                                      │         You lost · 1-0 · 4 moves         │         │                          │
+                            5         │                                          │     5   │                          │
+                                      │     ↵ Review board    n Home   q Quit    │         │                          │
+                                      │                                          │         │                          │
+                            6         │                                          │     6   │                          │
+                                      ╰──────────────────────────────────────────╯         │                          │
+                                                   ┏     ┓                                 │                          │
+                            7    ♟      ♟      ♛             ♟      ♟      ♟      ♟    7   │                          │
+                                                   ┗     ┛                                 │                          │
+                                                        !                                  │                          │
+                            8    ♜             ♝      ♚      ♛      ♝             ♜    8   │                          │
+                                                                                           │                          │
+                                 h      g      f      e      d      c      b      a        │                          │
+                                                                                           │                          │
+                                You  BLACK                                                 │                          │
+                                                                                           │                          │
+                                                                                           ╰──────────────────────────╯
+ 1-0   Checkmate · White wins  · board is read-only
+ ↵ Review board   n Home   q Quit

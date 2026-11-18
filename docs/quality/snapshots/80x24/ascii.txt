@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING · 192.168.1.20:4747   DEMO DATA            ● LIVE · 24 ms
+       Ben  BLACK                      BPP +4      ╭ GAME ────────────────────╮
+       a    b    c    d    e    f    g    h        │  YOUR MOVE               │
+  ▎    r         b         k    b         r        │ White · move 8           │
+  ▎8                                          8    │                          │
+  ▎    p    p    p              p    p    p        │ LAST MOVE                │
+  ▎7                                          7    │ 7… Qxd5  d8 → d5         │
+  ▎              n                                 │                          │
+  ▎6                                          6    │                          │
+  ▎                   q                            ╰──────────────────────────╯
+  ▎5                                          5    ╭ MOVES ───────────────────╮
+  ▎                   p    n                       │   4. d4       exd4       │
+  ▎4                                          4    │   5. O-O      Nxe4       │
+  ▎    *         *              N                  │   6. Re1      d5         │
+  ▎3                                          3    │   7. Bxd5     Qxd5       │
+  ▎    P    P    P    *  ┏   ┓  P    P    P        ╰──────────────────────────╯
+  ▎2                     ┗   ┛                2    ╭ ACTIONS ─────────────────╮
+  ▎    R    N    B    Q    R         K             │   Resign               r │
+  ▎1                                          1    │   Flip board           o │
+       a    b    c    d    e    f    g    h        │   Piece style          g │
+     ▶ You  WHITE                           p      │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ b1 selected · 3 legal squares marked •
+ ↑↓←→ Cursor   ↵ Select   Esc Clear   / Type move   Tab Focus   o Flip

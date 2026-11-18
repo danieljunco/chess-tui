@@ -1,0 +1,24 @@
+ ♞ VESPER  /  JOINED · 192.168.1.20:4747   DEMO DATA     ○ RECONNECTING · try 3
+       Ana  WHITE                           ♟      ╭ GAME ────────────────────╮
+       h    g    f    e    d    c    b    a        │  PAUSED                  │
+  ▎         ♚         ♜    ♛    ♝         ♜        │ Black · move 8           │
+  ▎1                                          1    │                          │
+  ▎    ♟    ♟    ♟              ♟    ♟    ♟        │ LAST MOVE                │
+  ▎2                                          2    │ 8. Nc3  b1 → c3          │
+  ▎              ♞              ♞                  │                          │
+  ▎3                                          3    │                          │
+  ▎                   ♞    ♟                       ╰──────────────────────────╯
+  ▎4                                          4    ╭ MOVES ───────────────────╮
+  ▎                        ♛                       │   5. O-O      Nxe4       │
+  ▎5                                          5    │   6. Re1      d5         │
+  ▎                             ♞                  │   7. Bxd5     Qxd5       │
+  ▎6                                          6    │   8. Nc3                 │
+  ▎    ♟    ♟    ♟  ┏   ┓       ♟    ♟    ♟        ╰──────────────────────────╯
+  ▎7                ┗   ┛                     7    ╭ ACTIONS ─────────────────╮
+  ▎    ♜         ♝    ♚         ♝         ♜        │   Resign               r │
+  ▎8                                          8    │   Flip board           o │
+       h    g    f    e    d    c    b    a        │   Piece style          g │
+     ▶ You  BLACK                      ♝♟♟ +4      │   Leave table          q │
+                                                   ╰──────────────────────────╯
+ ● Connection lost · reconnecting · last synced move 8. Nc3
+ ↑↓←→ Cursor   ↵ Select   / Type move   Tab Focus   o Flip   ? Help

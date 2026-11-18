@@ -1,0 +1,24 @@
+ ♞ VESPER  /  HOSTING   DEMO DATA                                   ● LISTENING
+
+                               YOUR TABLE IS READY
+                You play White · your friend gets the other side
+
+                             ╭────────────────────╮
+                             │      K7QF-M2XA     │
+                             ╰────────────────────╯
+                            INVITE CODE · single use
+
+                             Ask your friend to run
+                     vesper join 192.168.1.20:4747 K7QF-M2XA
+
+                              ⠋ Waiting for Black…
+
+               Works on the same network, a VPN or an SSH tunnel.
+             Traffic is not encrypted · play with people you trust.
+
+
+
+
+
+
+ Esc Stop hosting   ? Help

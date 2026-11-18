@@ -1,0 +1,36 @@
+ ♞ VESPER  /  LOCAL GAME   DEMO DATA                                                                      ◆ PASS & PLAY
+ ╭ GAME ────────────────╮                                                                  ╭ TABLE ───────────────────╮
+ │  WHITE TO MOVE       │       Black  BLACK                                    ♝♟♟ +4     │ ♔ White           ● here │
+ │ White · move 8       │                                                                  │ ♚ Black           ● here │
+ │                      │        a      b      c      d      e      f      g      h        │                          │
+ │ LAST MOVE            │  ▎                                                               │ Played on this terminal  │
+ │ 7… Qxd5  d8 → d5     │  ▎8    ♜             ♝             ♚      ♝             ♜    8   │                          │
+ │                      │  ▎                                                               │                          │
+ │ YOU PLAY             │  ▎                                                               ╰──────────────────────────╯
+ │ Both sides · pass & p│  ▎7    ♟      ♟      ♟                    ♟      ♟      ♟    7   ╭ MOVES ───────────────────╮
+ │                      │  ▎                                                               │   1. e4       e5         │
+ ╰──────────────────────╯  ▎                                                               │   2. Nf3      Nc6        │
+ ╭ ACTIONS ─────────────╮  ▎6                  ♞                                       6   │   3. Bc4      Nf6        │
+ │   Resign           r │  ▎                                                               │   4. d4       exd4       │
+ │   Flip board       o │  ▎                                                               │   5. O-O      Nxe4       │
+ │   Piece style      g │  ▎5                         ♛                                5   │   6. Re1      d5         │
+ │   Leave table      q │  ▎                                                               │   7. Bxd5     Qxd5       │
+ ╰──────────────────────╯  ▎                                                               │                          │
+                           ▎4                         ♟      ♞                         4   │                          │
+                           ▎                                                               │                          │
+                           ▎                                                               │                          │
+                           ▎3                                       ♞                  3   │                          │
+                           ▎                                                               │                          │
+                           ▎                              ┏     ┓                          │                          │
+                           ▎2    ♟      ♟      ♟                    ♟      ♟      ♟    2   │                          │
+                           ▎                              ┗     ┛                          │                          │
+                           ▎                                                               │                          │
+                           ▎1    ♜      ♞      ♝      ♛      ♜             ♚           1   │                          │
+                           ▎                                                               │                          │
+                                 a      b      c      d      e      f      g      h        │                          │
+                                                                                           │                          │
+                              ▶ White  WHITE                                         ♟     │                          │
+                                                                                           │                          │
+                                                                                           ╰──────────────────────────╯
+ Your move · White  — select a piece with ↵, or press / to type e2e4
+ ↑↓←→ Cursor   ↵ Select   / Type move   Tab Focus   o Flip   ? Help   r Resign   x Simulate drop

@@ -1,0 +1,24 @@
+ ♞ VESPER  /  JOIN A GAME   DEMO DATA                                    v0.1.0
+
+                                   JOIN A GAME
+                   Connect directly to your friend's terminal
+
+                ╭ HOST ADDRESS ────────────────────────────────╮
+                │ 192.168.1.20:99999▏                          │
+                ╰──────────────────────────────────────────────╯
+
+                ╭ INVITE CODE ─────────────────────────────────╮
+                │ K7QF-M2XA                                    │
+                ╰──────────────────────────────────────────────╯
+
+                   ● Port must be a number between 1 and 65535
+
+                   The host sees both on their waiting screen.
+                Port defaults to 4747. Works on the same network,
+                             a VPN or an SSH tunnel.
+
+
+
+
+
+ Tab Next field   ↵ Connect   Esc Back
