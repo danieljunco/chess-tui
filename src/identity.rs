@@ -23,6 +23,20 @@ pub fn normalize_invite(code: &str) -> Option<String> {
     valid.then(|| format!("{}-{}", &raw[..4], &raw[4..]))
 }
 
+/// Sixteen hex digits, dashes and case ignored. Returns `XXXXXXXX-XXXXXXXX`.
+pub fn normalize_fingerprint(raw: &str) -> Option<String> {
+    let compact: String = raw
+        .chars()
+        .filter(|c| *c != '-' && !c.is_whitespace())
+        .flat_map(|c| c.to_uppercase())
+        .collect();
+    if compact.len() == 16 && compact.chars().all(|c| c.is_ascii_hexdigit()) {
+        Some(format!("{}-{}", &compact[..8], &compact[8..]))
+    } else {
+        None
+    }
+}
+
 /// 40 bits from the OS CSPRNG, Crockford-encoded.
 pub fn new_invite() -> String {
     let mut bytes = [0u8; 5];

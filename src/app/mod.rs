@@ -10,6 +10,7 @@ use std::time::{Duration, Instant};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
 use crate::domain::{Color, DrawReason, Game, Role, Square, color_name, parse_square};
+use crate::identity::normalize_fingerprint;
 pub use provider::*;
 
 pub const DEFAULT_PORT: u16 = 4747;
@@ -72,6 +73,7 @@ impl MenuItem {
 pub struct JoinForm {
     pub address: String,
     pub code: String,
+    pub fingerprint: String,
     pub field: usize,
     pub error: Option<(usize, String)>,
 }
@@ -472,8 +474,8 @@ impl App {
         };
         match key.code {
             KeyCode::Esc => self.screen = Screen::Home { selected: 1 },
-            KeyCode::Tab | KeyCode::Down => form.field = (form.field + 1) % 2,
-            KeyCode::BackTab | KeyCode::Up => form.field = (form.field + 1) % 2,
+            KeyCode::Tab | KeyCode::Down => form.field = (form.field + 1) % 3,
+            KeyCode::BackTab | KeyCode::Up => form.field = (form.field + 2) % 3,
             KeyCode::Backspace => {
                 field_mut(form).pop();
                 form.error = None;
@@ -483,17 +485,47 @@ impl App {
                     form.field = 1;
                     return;
                 }
+                let fingerprint = match form.fingerprint.trim() {
+                    "" => None,
+                    raw => match normalize_fingerprint(raw) {
+                        Some(fp) => Some(fp),
+                        None => {
+                            form.error = Some((2, "Host key looks like A1B2C3D4-E5F60718".into()));
+                            return;
+                        }
+                    },
+                };
                 match validate_join(&form.address, &form.code) {
                     Ok((addr, code)) => self.start(StartRequest::Join {
                         addr,
                         code,
-                        fingerprint: None,
+                        fingerprint,
                     }),
                     Err(err) => form.error = Some(err),
                 }
             }
+            KeyCode::Char(' ') => match form.field {
+                0 => {
+                    let word = form.address.trim().to_ascii_lowercase();
+                    if word == "vesper" || word == "join" {
+                        form.address.clear();
+                    } else if !form.address.is_empty() {
+                        form.field = 1;
+                    }
+                    form.error = None;
+                }
+                1 => {
+                    form.field = 2;
+                    form.error = None;
+                }
+                _ => {}
+            },
             KeyCode::Char(c) if !c.is_control() => {
-                let limit = if form.field == 0 { 64 } else { 12 };
+                let limit = match form.field {
+                    0 => 64,
+                    1 => 12,
+                    _ => 19,
+                };
                 let field = field_mut(form);
                 if field.chars().count() < limit {
                     field.push(c);
@@ -771,10 +803,10 @@ fn on_history_key(g: &mut GameScreen, key: KeyEvent) {
 }
 
 fn field_mut(form: &mut JoinForm) -> &mut String {
-    if form.field == 0 {
-        &mut form.address
-    } else {
-        &mut form.code
+    match form.field {
+        0 => &mut form.address,
+        1 => &mut form.code,
+        _ => &mut form.fingerprint,
     }
 }
 

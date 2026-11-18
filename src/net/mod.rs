@@ -9,9 +9,9 @@ mod peer;
 use std::net::{IpAddr, Ipv4Addr, UdpSocket};
 use std::time::Duration;
 
+pub use crate::identity::normalize_fingerprint;
 pub use host::HostProvider;
 pub use host::NetConfig;
-pub use noise::normalize_fingerprint;
 pub use peer::PeerProvider;
 
 pub(crate) fn advertise(bind: IpAddr) -> Vec<String> {

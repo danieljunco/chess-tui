@@ -26,7 +26,7 @@
 
 ## Screen A2: Join form
 
-Two fields — `Host address` (`192.168.1.20:4747`, port optional) and `Invite code` (`K7QF-M2XA`, case/dash-insensitive). Inline validation, `[Tab]` between fields, `[↵] Connect`, `[Esc] Back`. While connecting: `◌ Connecting to 192.168.1.20:4747…` with the form read-only; failures show a specific reason (`Host unreachable`, `Invite code not accepted`, `Game already full`).
+Three fields — `Host address` (`192.168.1.20:4747`, port optional), `Invite code` (`K7QF-M2XA`, case/dash-insensitive) and `Host key` (`A1B2C3D4-E5F60718`, optional on a trusted network). Pasting the host's `vesper join` line splits it across the fields. `[Tab]` moves between fields, `[↵] Connect`, `[Esc] Back`. While connecting: `◌ Connecting to 192.168.1.20:4747…` with the form read-only; failures show a specific reason (`Host unreachable`, `Invite code not accepted`, `Game already full`).
 
 ## Screen B: Waiting room (host)
 

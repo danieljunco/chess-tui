@@ -207,7 +207,7 @@ fn help(frame: &mut Frame, body: Rect, app: &App, theme: &Theme) {
         Line::raw(""),
         head("PLAYING ONLINE"),
         Line::styled(
-            "  Host: vesper host   ·   Join: vesper join <address> <code>",
+            "  Host: vesper host   ·   Join: address, code, and the host key",
             theme.text(),
         ),
         Line::styled(

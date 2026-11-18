@@ -99,7 +99,7 @@ fn input_box(
 }
 
 pub fn join(frame: &mut Frame, area: Rect, form: &JoinForm, theme: &Theme) {
-    let card = centered(area, 52, 18);
+    let card = centered(area, 56, 20);
     let title = vec![
         Line::styled("JOIN A GAME", theme.accent()),
         Line::styled("Connect directly to your friend's terminal", theme.muted()),
@@ -121,12 +121,22 @@ pub fn join(frame: &mut Frame, area: Rect, form: &JoinForm, theme: &Theme) {
     );
     input_box(
         frame,
-        Rect::new(card.x + 2, card.y + 7, card.width - 4, 3),
+        Rect::new(card.x + 2, card.y + 6, card.width - 4, 3),
         "INVITE CODE",
         &form.code,
         "K7QF-M2XA",
         form.field == 1,
         err_field == Some(1),
+        theme,
+    );
+    input_box(
+        frame,
+        Rect::new(card.x + 2, card.y + 9, card.width - 4, 3),
+        "HOST KEY",
+        &form.fingerprint,
+        "A1B2C3D4-E5F60718",
+        form.field == 2,
+        err_field == Some(2),
         theme,
     );
     let mut lines = Vec::new();
@@ -139,17 +149,16 @@ pub fn join(frame: &mut Frame, area: Rect, form: &JoinForm, theme: &Theme) {
     }
     lines.push(Line::raw(""));
     lines.push(Line::styled(
-        "The host sees both on their waiting screen.",
+        "Paste the host's vesper join line, or fill these in.",
         theme.faint(),
     ));
     lines.push(Line::styled(
-        "Port defaults to 4747. Works on the same network,",
+        "Host key is optional on your own network.",
         theme.faint(),
     ));
-    lines.push(Line::styled("a VPN or an SSH tunnel.", theme.faint()));
     frame.render_widget(
         Paragraph::new(lines).alignment(Alignment::Center),
-        Rect::new(card.x, card.y + 11, card.width, 7),
+        Rect::new(card.x, card.y + 13, card.width, 6),
     );
 }
 

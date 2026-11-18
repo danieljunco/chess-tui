@@ -17,7 +17,7 @@ use snow::{Builder, TransportState};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 
-use crate::identity::ct_eq;
+use crate::identity::{ct_eq, normalize_fingerprint};
 use crate::protocol;
 
 const PATTERN: &str = "Noise_XX_25519_ChaChaPoly_SHA256";
@@ -48,20 +48,6 @@ pub fn fingerprint(public_key: &[u8]) -> String {
         .map(|byte| format!("{byte:02X}"))
         .collect();
     format!("{}-{}", &hex[..8], &hex[8..])
-}
-
-/// Sixteen hex digits, dashes and case ignored. Returns `XXXXXXXX-XXXXXXXX`.
-pub fn normalize_fingerprint(raw: &str) -> Option<String> {
-    let compact: String = raw
-        .chars()
-        .filter(|c| *c != '-' && !c.is_whitespace())
-        .flat_map(|c| c.to_uppercase())
-        .collect();
-    if compact.len() == 16 && compact.chars().all(|c| c.is_ascii_hexdigit()) {
-        Some(format!("{}-{}", &compact[..8], &compact[8..]))
-    } else {
-        None
-    }
 }
 
 pub async fn accept(sock: &mut TcpStream, key: &HostKey) -> io::Result<TransportState> {

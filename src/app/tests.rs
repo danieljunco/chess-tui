@@ -345,6 +345,44 @@ fn join_form_validates_before_connecting() {
 }
 
 #[test]
+fn join_form_fits_the_full_invite_and_host_key() {
+    let mut app = App::new(fixtures::demo_factory(), Instant::now());
+    press(&mut app, &[KeyCode::Down, KeyCode::Enter]);
+    type_text(&mut app, "192.168.1.20:4747");
+    press(&mut app, &[KeyCode::Tab]);
+    type_text(&mut app, "K7QF-M2XA ");
+    type_text(&mut app, "A1B2C3D4-E5F60718");
+    match &app.screen {
+        Screen::Join(form) => {
+            assert_eq!(form.code, "K7QF-M2XA");
+            assert_eq!(form.fingerprint, "A1B2C3D4-E5F60718");
+            assert_eq!(form.field, 2);
+        }
+        _ => panic!("still on the join form"),
+    }
+    press(&mut app, &[KeyCode::Enter]);
+    assert!(matches!(app.screen, Screen::Connecting { .. }));
+}
+
+#[test]
+fn join_form_splits_the_line_the_host_shows() {
+    let mut app = App::new(fixtures::demo_factory(), Instant::now());
+    press(&mut app, &[KeyCode::Down, KeyCode::Enter]);
+    type_text(
+        &mut app,
+        "vesper join 192.168.1.20:4747 K7QF-M2XA A1B2C3D4-E5F60718",
+    );
+    match &app.screen {
+        Screen::Join(form) => {
+            assert_eq!(form.address, "192.168.1.20:4747");
+            assert_eq!(form.code, "K7QF-M2XA");
+            assert_eq!(form.fingerprint, "A1B2C3D4-E5F60718");
+        }
+        _ => panic!("still on the join form"),
+    }
+}
+
+#[test]
 fn join_address_and_invite_normalization() {
     assert_eq!(
         validate_join("192.168.1.20", "k7qf m2xa"),

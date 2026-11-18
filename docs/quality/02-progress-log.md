@@ -108,3 +108,19 @@ P2P is the default path as of this entry. `vesper host` / `vesper join` / the ho
   status messages, or building/installing the package on Arch. No release was
   published; the recipe still targets the existing v0.1.0 source archive, so
   these changes must ship in a subsequent release to reach package users.
+
+## Join form holds the host key (2026-11-18)
+
+- The join screen only had address and invite code, and the code field stopped
+  at 12 characters, so a guest could not enter the host key shown beside the
+  invite (`A1B2C3D4-E5F60718`). The menu path also always connected with no key.
+- The form now has a Host key field. Tab moves among the three fields. Pasting
+  the host's `vesper join <address> <code> <key>` line splits it into the
+  fields. An empty key still connects, for play on your own network. A bad key
+  is rejected before the connection starts.
+- Validation: `cargo fmt --check` passed;
+  `cargo clippy --all-targets --all-features -- -D warnings` passed;
+  `cargo test --lib` passed (58 tests).
+- Not verified: a hand-driven terminal at 80×24, or a real join that pins the
+  host key from the form. Snapshot files under `docs/quality/snapshots/` were
+  not regenerated.

@@ -152,6 +152,7 @@ pub fn scenes(now: Instant) -> Vec<(&'static str, App)> {
     a.screen = Screen::Join(JoinForm {
         address: "192.168.1.20".into(),
         code: "k7qf".into(),
+        fingerprint: String::new(),
         field: 1,
         error: None,
     });
@@ -161,6 +162,7 @@ pub fn scenes(now: Instant) -> Vec<(&'static str, App)> {
     a.screen = Screen::Join(JoinForm {
         address: "192.168.1.20:99999".into(),
         code: "K7QF-M2XA".into(),
+        fingerprint: String::new(),
         field: 0,
         error: Some((0, "Port must be a number between 1 and 65535".into())),
     });
